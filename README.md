@@ -1,5 +1,6 @@
 
 Overview/Architecture:
+
     *Frontend data management:*
     This project is designed to be a scalable real-time Pub/Sub chat application that not only supports real-time websocket messaging at scale (via socket.io & Redis), but also supports data persistence into a mySQL database at scale. The general flow is as follows: Server connection is established -> Socket.IO connection is established and tied in with the server -> Redis client is established -> As user events occur, Socket.IO events are emitted/broadcasted accordingly (e.g. when a user first joins a chat, or when a user sends a message) -> As events occur, data is pushed or pulled accordingly via Redis. It knows how to process the data since it has blocks of logic wrapped around Socket.IO subscription triggers.
 
@@ -28,24 +29,26 @@ Setup Instructions:
 - If not installed locally, install redis-server
 - Create a new mySQL database with the name `redis_socketio`
 - In your new `redis_socketio` database, run the following SQL command to create our `messages` table:
-
+```
 CREATE TABLE `messages` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `data` TEXT,
   `db_insert_date` datetime DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 
+```
 
 - In the terminal, navigate to the project directory root and run the command: `npm install` (to build project's node_modules, etc)
 - In the project root, create a file with the name `.env`, with the following (replace each `REPLACE_WITH_DATABASE_*` with your local information. The `.env` file is already included in .gitignore, make sure not to commit to version control. The `nodeenv` package I'm using automatically knows to look for the `.env` file):
 
+```
 DB_HOST=localhost
 DB_USER=REPLACE_WITH_DATABASE_USER
 DB_PASSWORD=REPLACE_WITH_DATABASE_PASSWORD
 DB_DATABASE=redis_socketio
 DB_PORT=REPLACE_WITH_DATABASE_PORT
-
-- Depending on your local mySQL settings, you may need to increase the `max_allowed_packet` size. To do this, you can log into mySQL in a terminal, and run the following 2 commands: `set global net_buffer_length=1000000;`  and `set global max_allowed_packet=1000000000;` Please note, these are not ideal settings for production and could cause security issues.
+```
+- Depending on your local mySQL settings, you may need to increase the `max_allowed_packet` size. To do this, you can log into mySQL in a terminal, and run the following 2 commands: `set global net_buffer_length=1000000;`  and `set global max_allowed_packet=1000000000;` _(Please note, these are not ideal settings for production and could cause security issues.)_
 - Open 3 separate terminal tabs
 - In the first tab, navigate to the project directory root and run the command: `nodemon` (or `node index.js` if that doesn't work for w/e reason)
 - In the second tab, run the command: `redis-server` (to run the Redis server)
