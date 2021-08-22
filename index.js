@@ -90,7 +90,7 @@ io.on("connection", socket => {
 
 
 
-// must create a .env file in root directory and add these values 
+// Must create a .env file in root directory to create the custom process.env.* values (see README)
 function triggerDatabaseInsert(data, messageQueueLength) {
     let con = mysql.createConnection({
       host: process.env.DB_HOST,
